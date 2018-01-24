@@ -107,18 +107,20 @@ class QRCode(object):
 class QRCodeLabel(object):
     FONT_FILE = "assets/fonts/CaviarDreams/Caviar Dreams Bold.ttf"
     FONT_SIZE = 10
-    FONT = ImageFont.truetype(FONT_FILE, FONT_SIZE)
     FONT_COLOR = 'black'
     DEFAULT_TEXT = ' '
     SPACE_BEWEEN_LINES = 0
     POS_ORIGIN = (0, 0)
 
-    def __init__(self, text=None):
+    def __init__(self, text=None, font_file=None):
         """
         Create a label with the given text.
 
         :param text: The text to be draw at label.
         :type text: str.
+
+        :param font_file: A path to a true type or open type font
+        :type font_file: str.
 
         """
         if not text:
@@ -127,6 +129,7 @@ class QRCodeLabel(object):
         self._lines = self._prepare_lines(text)
         self._offset = None
         self._font_size = None
+        self._font_file = font_file
 
     @property
     def offset(self):
@@ -155,6 +158,9 @@ class QRCodeLabel(object):
     def font_size(self):
         """
         """
+        if not self._font_file:
+            raise AttributeError("Only exists if a font_file was especified")
+
         return self._font_size if self._font_size else self.FONT_SIZE
 
     @font_size.setter
@@ -166,6 +172,9 @@ class QRCodeLabel(object):
         :type value: int.
 
         """
+        if not self._font_file:
+            raise AttributeError("Only exists if a font_file was especified")
+
         self._font_size = value
 
     def _get_image(self):
@@ -216,4 +225,7 @@ class QRCodeLabel(object):
         return (width, height)
 
     def _get_font(self):
-        return ImageFont.truetype(self.FONT_FILE, self.font_size)
+        if self._font_size:
+            return ImageFont.truetype(self._font_file, self.font_size)
+
+        return ImageFont.load_default()
