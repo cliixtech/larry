@@ -58,6 +58,14 @@ class QRCode(object):
         string_data = b64bytes.decode(self.BYTES_DECODER)
         return self.DATA_URI_FORMAT % (self.IMAGE_MIME_TYPE, string_data)
 
+    @property
+    def image_bytes(self):
+        return self._get_image_bytes()
+
+    @property
+    def data_uri(self):
+        return self.get_data_uri()
+
     def _get_image(self):
         qrc_img = self._get_qrcode_image()
         label_img = self._label._get_image()
